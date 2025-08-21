@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
@@ -32,7 +32,7 @@ jobs:
           ./scripts/feeds install -a
           make package/netwatchdog/compile V=s
       - name: Upload IPK package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ipk-build-output
           path: |
