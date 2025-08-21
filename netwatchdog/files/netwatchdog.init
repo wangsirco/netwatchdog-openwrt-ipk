@@ -1,0 +1,13 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+start() {
+    /root/net_check.sh &
+    echo $! > /var/run/netwatchdog.pid
+}
+
+stop() {
+    kill $(cat /var/run/netwatchdog.pid)
+    rm -f /var/run/netwatchdog.pid
+}
