@@ -12,25 +12,35 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
+
       - name: Install Linux dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y git wget python3-pip
+
       - name: Download OpenWrt SDK
         run: |
           wget https://downloads.openwrt.org/releases/22.03.7/targets/x86/64/openwrt-sdk-22.03.7-x86-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz
           tar -xf openwrt-sdk-22.03.7-x86-64_gcc-11.2.0_musl.Linux-x86_64.tar.xz
           mv openwrt-sdk-22.03.7-x86-64_gcc-11.2.0_musl.Linux-x86_64 sdk
+
       - name: Copy package to SDK
         run: |
           mkdir -p sdk/package/netwatchdog
           cp -r ./netwatchdog/* sdk/package/netwatchdog/
+
+      - name: Create minimal .config for SDK
+        run: |
+          cd sdk
+          make defconfig
+
       - name: Compile package
         run: |
           cd sdk
           ./scripts/feeds update -a
           ./scripts/feeds install -a
           make package/netwatchdog/compile V=s
+
       - name: Upload IPK package artifact
         uses: actions/upload-artifact@v4
         with:
